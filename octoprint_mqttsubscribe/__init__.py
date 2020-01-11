@@ -68,13 +68,13 @@ class MQTTSubscribePlugin(octoprint.plugin.SettingsPlugin,
 		self._logger.debug("Received from " + topic + "|" + message)
 
 		for t in self._settings.get(["topics"]):
-			if topic == "octoprint/plugins/mqttsubscribe/" + t["topic"] and message == t["subscribecommand"]:
+			if topic == "octoprint/plugins/mqttsubscribe/" + t["topic"]:
 				self._logger.debug("Found match " + t["topic"] + "|" + t["subscribecommand"])
 				try:
 					address = "localhost"
 					port = self.port
 					headers = {'Content-type': 'application/json','X-Api-Key': self._settings.get(["api_key"])}
-					data = t["subscribecommand"]
+					data = message
 					url = "http://%s:%s/api/%s" % (address,port,t["topic"])
 					if t["type"] == "post":
 						r = requests.post(url, data=data, headers=headers)
